@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
-@Table(name = "conjunto")
+@Table(name = "conjuntos")
 public class Conjunto implements Serializable {
 	
 	@Id
