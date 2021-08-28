@@ -1,13 +1,33 @@
 package com.appministracion.springboot.backend.apirest;
 
+import java.util.Iterator;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class SpringBootBackendAppministracionApirestApplication {
+public class SpringBootBackendAppministracionApirestApplication implements CommandLineRunner {
 
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootBackendAppministracionApirestApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		String passwoord ="12345";
+		
+		for (int i = 0; i < 4; i++) {
+			String passwordBcrypt = passwordEncoder.encode(passwoord); 
+			System.out.println(passwordBcrypt);
+		}
+		
 	}
 
 }

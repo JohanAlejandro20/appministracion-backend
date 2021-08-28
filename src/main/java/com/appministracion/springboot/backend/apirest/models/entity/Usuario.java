@@ -2,7 +2,9 @@ package com.appministracion.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,11 +12,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -26,19 +31,25 @@ public class Usuario implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cod_usuario;
 	private String nombre;
+	@Column(unique= true, length  = 40)
 	private String correo;
-	private long telefono;
+	@Column(length = 60)
 	private String contraseña;
+	private long telefono;
+	private Boolean activo;
+	
 	
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
 	private Date  createAt;
 
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL )
 	@JsonIgnoreProperties({"usuarios","hibernateLazyInitializer","handler"})
 	@JoinColumn(name = "cod_rol")
-	private Rol rol;
+	@JoinTable(name="usuarios_roles", joinColumns = @JoinColumn(name="cod_usuario"),inverseJoinColumns = @JoinColumn(name="cod_rol"),
+	uniqueConstraints = {@UniqueConstraint(columnNames = {"cod_usuario","cod_rol"})})
+	private List<Rol> roles;
 	 
 	@JsonIgnoreProperties({"usuarios","hibernateLazyInitializer","handler"})
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -73,7 +84,7 @@ public class Usuario implements Serializable{
 	public long getTelefono() {
 		return telefono;
 	}
-	public void setTelefono(int telefono) {
+	public void setTelefono(long telefono) {
 		this.telefono = telefono;
 	}
 	public String getContraseña() {
@@ -88,20 +99,36 @@ public class Usuario implements Serializable{
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
-	public Rol getRol() {
-		return rol;
-	}
-	public void setRol(Rol rol) {
-		this.rol = rol;
-	}
 	public Conjunto getConjunto() {
 		return conjunto;
 	}
 	public void setConjunto(Conjunto conjunto) {
 		this.conjunto = conjunto;
 	}
+
 	
-	
+
+	public Boolean getActivo() {
+		return activo;
+	}
+
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+
+
+	public List<Rol> getRoles() {
+		return roles;
+	}
+
+
+	public void setRoles(List<Rol> roles) {
+		this.roles = roles;
+	}
+
+
+
 	/**
 	 * 
 	 */
