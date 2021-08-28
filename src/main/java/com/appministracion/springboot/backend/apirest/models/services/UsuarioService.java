@@ -20,7 +20,7 @@ import com.appministracion.springboot.backend.apirest.models.entity.Usuario;
 
 
 @Service
-public class UsuarioService implements UserDetailsService {
+public class UsuarioService implements UserDetailsService,IUsuarioService {
 
 	
 	private Logger logger = LoggerFactory.getLogger(UsuarioService.class);
@@ -44,8 +44,16 @@ public class UsuarioService implements UserDetailsService {
 				.peek(authority -> logger.info("Rol:"+ authority.getAuthority()))
 				.collect(Collectors.toList());
 		
-		return new User(usuario.getNombre(), usuario.getContraseña(), usuario.getActivo(), true, true, true, authorities);
+		return new User(usuario.getCorreo(), usuario.getContraseña(), usuario.getActivo(), true, true, true, authorities);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Usuario findByCorreo(String correo) {
+		
+		return usuarioDao.findByCorreo(correo);
+	}
+
 
 	
 	

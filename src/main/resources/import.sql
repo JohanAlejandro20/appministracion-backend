@@ -8,8 +8,8 @@ INSERT INTO clientes (nombre,apellido,email,create_at) VALUES ('maria', 'lopez',
 
 
 --Tabla de roles
-INSERT INTO roles (nombre,create_at) VALUES ('Administrador',NOW());
-INSERT INTO roles (nombre,create_at) VALUES ('Residente',NOW());
+INSERT INTO roles (nombre,create_at) VALUES ('ROLE_ADMINISTRADOR',NOW());
+INSERT INTO roles (nombre,create_at) VALUES ('ROLE_RESIDENTE',NOW());
 
 
 --Tabla de Conjuntos
