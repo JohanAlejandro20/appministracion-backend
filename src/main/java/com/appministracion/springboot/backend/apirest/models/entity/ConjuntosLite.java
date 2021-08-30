@@ -20,54 +20,29 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
-
-
 @Entity
 @Table(name = "conjuntos")
-public class Conjunto implements Serializable {
-	
+public class ConjuntosLite  implements Serializable{
+
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY )
 	private Long cod_conjunto;
 	private String nombre;
 	private String nit;
 	
+	private String direccion;
+	
+
+
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
 	private Date  createAt;
-	
-	private String direccion;
-	
-	
-
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "conjunto", cascade = CascadeType.ALL)
-	@JsonIgnoreProperties({"conjunto","hibernateLazyInitializer","handler"})
-	private List<Usuario> usuarios;
-	
-	
-	public Conjunto() {
-		this.usuarios = new ArrayList<>();
-	}
 	
 	
 	@PrePersist
 	public void prePersist() {
 		this.createAt = new Date();
 	}
-
-	
-	public List<Usuario> getUsuarios() {
-		return usuarios;
-	}
-
-
-	public void setUsuarios(List<Usuario> usuarios) {
-		this.usuarios = usuarios;
-	}
-
 
 	public long getCod_conjunto() {
 		return cod_conjunto;
@@ -109,11 +84,9 @@ public class Conjunto implements Serializable {
 	}
 	
 	
-	
 	public String getDireccion() {
 		return direccion;
 	}
-
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
@@ -122,5 +95,4 @@ public class Conjunto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
-
 }

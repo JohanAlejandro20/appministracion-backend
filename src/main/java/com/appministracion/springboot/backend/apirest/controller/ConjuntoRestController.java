@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.appministracion.springboot.backend.apirest.models.entity.Conjunto;
+import com.appministracion.springboot.backend.apirest.models.entity.ConjuntosLite;
 import com.appministracion.springboot.backend.apirest.models.services.IConjuntoService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -21,9 +22,9 @@ public class ConjuntoRestController {
 	@Autowired
 	private IConjuntoService conjuntoService;
 
-	@Secured("ROLE_ADMINISTRADOR")
+//	@Secured("ROLE_RESIDENTE")
 	@GetMapping("/conjuntos")
-	public  List<Conjunto> index(){
+	public  List<ConjuntosLite> index(){
 		return conjuntoService.findAll();
 	}
 }
