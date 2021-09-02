@@ -7,7 +7,7 @@ import com.appministracion.springboot.backend.apirest.models.entity.ConjuntosLit
 
 public interface IConjuntoService {
 	
-	
-
     public List<ConjuntosLite> findAll();
+    
+    public Conjunto findById(long cod_conjunto);
 }

@@ -54,6 +54,12 @@ public class UsuarioService implements UserDetailsService,IUsuarioService {
 		return usuarioDao.findByCorreo(correo);
 	}
 
+	@Override
+	public Usuario insertUsuario(Usuario usuario) {
+		
+		return usuarioDao.save(usuario);
+	}
+
 
 	
 	

@@ -2,7 +2,8 @@ package com.appministracion.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,6 +23,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "usuarios")
@@ -30,6 +32,7 @@ public class Usuario implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cod_usuario;
+	@NotNull
 	private String nombre;
 	@Column(unique= true, length  = 40)
 	private String correo;
@@ -49,7 +52,7 @@ public class Usuario implements Serializable{
 	@JoinColumn(name = "cod_rol")
 	@JoinTable(name="usuarios_roles", joinColumns = @JoinColumn(name="cod_usuario"),inverseJoinColumns = @JoinColumn(name="cod_rol"),
 	uniqueConstraints = {@UniqueConstraint(columnNames = {"cod_usuario","cod_rol"})})
-	private List<Rol> roles;
+	private Set<Rol> roles = new HashSet<>();
 	 
 	@JsonIgnoreProperties({"usuarios","hibernateLazyInitializer","handler"})
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -81,6 +84,17 @@ public class Usuario implements Serializable{
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
+	
+	public Set<Rol> getRoles() {
+		return roles;
+	}
+
+
+	public void setRoles(Set<Rol> roles) {
+		this.roles = roles;
+	}
+
+
 	public long getTelefono() {
 		return telefono;
 	}
@@ -116,19 +130,7 @@ public class Usuario implements Serializable{
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
 	}
-
-
-	public List<Rol> getRoles() {
-		return roles;
-	}
-
-
-	public void setRoles(List<Rol> roles) {
-		this.roles = roles;
-	}
-
-
-
+	
 	/**
 	 * 
 	 */

@@ -17,7 +17,7 @@ INSERT INTO roles (nombre,create_at) VALUES ('ROLE_RESIDENTE',NOW());
 INSERT INTO conjuntos (nombre,nit,direccion,create_at ) VALUES ('Los olivos','231','cra 105 f ·72-85',NOW());
 INSERT INTO conjuntos (nombre,nit,direccion,create_at) VALUES ('Alamos','2132','cra 109 f 79-85',NOW());
 INSERT INTO conjuntos (nombre,nit,direccion,create_at) VALUES ('Puerto bahia','21231','cra 95 f 70-85',NOW());
-INSERT INTO conjuntos (nombre,nit,direccion,create_at) VALUES ('El bosque','4343'.'cra 105 f 72',NOW());
+INSERT INTO conjuntos (nombre,nit,direccion,create_at) VALUES ('El bosque','4343','cra 105 f 72',NOW());
 
 
 
