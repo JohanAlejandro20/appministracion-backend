@@ -7,5 +7,6 @@ public interface IUsuarioService {
 
 	public Usuario findByCorreo(String correo); 
 	
+	public Usuario insertUsuario(Usuario usuario);
 
 }

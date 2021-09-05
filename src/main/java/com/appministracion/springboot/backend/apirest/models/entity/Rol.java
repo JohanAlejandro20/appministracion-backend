@@ -3,16 +3,23 @@ package com.appministracion.springboot.backend.apirest.models.entity;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.ManyToAny;
 
 
 
@@ -31,7 +38,7 @@ public class Rol implements Serializable{
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
 	private Date  createAt;
-	
+
 	@PrePersist
 	public void prePersist() {
 		this.createAt = new Date();
@@ -72,5 +79,6 @@ public class Rol implements Serializable{
 		this.createAt = createAt;
 	}
 
+	
 	private static final long serialVersionUID = 1L;
 }
