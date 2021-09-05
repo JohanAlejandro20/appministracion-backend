@@ -52,17 +52,21 @@ public class UserRestController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			Usuario usuario = new Usuario();
-			logger.warn("Lllegue a Registrar el usuario.");
+			logger.warn("Llegue  a Registrar el usuario." + request.get("activo"));
+			logger.warn("Llegue  a Registrar el usuario." + request);
+			
+	
 			
 			
 			//cargue de datos
 			boolean activo = (boolean) request.get("activo");
 			String correo = (String) request.get("correo");
 			String nombre = (String) request.get("nombre");
-			int telefono = (int) request.get("telefono");
+			String telefono = (String) request.get("telefono");
 			int cod_conjunto_request =  (int) request.get("cod_conjunto");
 			Long cod_conjunto = Long.valueOf(cod_conjunto_request);
 			int cod_rol_request =  (int) request.get("cod_rol");
+			
 			Long cod_rol = Long.valueOf(cod_rol_request);
 			
 			
@@ -87,7 +91,7 @@ public class UserRestController {
 				
 				response.put("error", true);
 				response.put("Mensaje", "El conjunto con el id: ".concat(cod_conjunto.toString().concat(" no existe en la base de datos")));
-				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 				
 			}
 			
@@ -96,7 +100,7 @@ public class UserRestController {
 			if( rol == null) {
 				response.put("error", true);
 				response.put("Mensaje", "El rol con el id: ".concat(cod_rol.toString().concat(" no existe en la base de datos")));
-				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 			}
 			
 			Usuario UsuarioRegistrado = null;
@@ -106,13 +110,13 @@ public class UserRestController {
 			} catch (DataAccessException e) {
 				response.put("Mensaje", "Error al realizar la consulta del usuarname en la base de datos");
 				response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 			}
 			
 			if(UsuarioRegistrado != null) {
 				response.put("error", true);
 				response.put("Mensaje", "EL correo ".concat(correo.toString().concat(" Ya se encuentra registrado")));
-				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 				
 			}
 			

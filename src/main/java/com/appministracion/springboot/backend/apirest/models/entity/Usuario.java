@@ -38,7 +38,7 @@ public class Usuario implements Serializable{
 	private String correo;
 	@Column(length = 60)
 	private String contraseña;
-	private long telefono;
+	private String telefono;
 	private Boolean activo;
 	
 	
@@ -95,10 +95,10 @@ public class Usuario implements Serializable{
 	}
 
 
-	public long getTelefono() {
+	public String getTelefono() {
 		return telefono;
 	}
-	public void setTelefono(long telefono) {
+	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 	public String getContraseña() {
