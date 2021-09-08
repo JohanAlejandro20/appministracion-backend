@@ -1,0 +1,91 @@
+package com.appministracion.springboot.backend.apirest.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.appministracion.springboot.backend.apirest.models.entity.Conjunto;
+import com.appministracion.springboot.backend.apirest.models.entity.Pregunta;
+import com.appministracion.springboot.backend.apirest.models.entity.Usuario;
+import com.appministracion.springboot.backend.apirest.models.services.IPreguntaService;
+import com.appministracion.springboot.backend.apirest.models.services.IUsuarioService;
+
+@CrossOrigin(origins = {"http://localhost:4200"})
+@RestController
+@RequestMapping("/api")
+public class PreguntaRestController {
+	
+	private Logger logger = LoggerFactory.getLogger(IPreguntaService.class);
+	
+	@Autowired
+	private IUsuarioService usuarioService;
+	
+	@Autowired
+	private IPreguntaService preguntaService;
+	
+	@PostMapping(path = "/realizar-pregunta", consumes = "application/json")
+	public ResponseEntity<?> realizarPregunta(@RequestBody Map<String, Object>  request ) {
+		
+		Map<String, Object> response = new HashMap<>();
+		try {
+			Pregunta pregunta =new Pregunta();
+			
+			logger.warn("Llegue  a Realizar la pregunta" + request);
+
+			//cargue de datos
+			int cod_usuario_request =  (int) request.get("cod_usuario");
+			Long cod_usuario = Long.valueOf(cod_usuario_request);
+			String nombre_pregunta = (String) request.get("nombre_pregunta");
+			String descripcion = (String) request.get("descripcion");
+			
+			
+			//Busqueda de usuario
+			Usuario usuario = null;
+			try {
+				 usuario = usuarioService.findById(cod_usuario);
+			} catch (DataAccessException e) {
+				response.put("Mensaje", "Error al realizar la consulta del usuario en la base de datos");
+				response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+			if(usuario == null) {
+				response.put("error", true);
+				response.put("Mensaje", "El usuario con el id: ".concat(cod_usuario.toString().concat(" no existe en la base de datos")));
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+			}
+			
+	
+			//cargar datos de la pregunta
+			pregunta = new Pregunta();
+			pregunta.setNombre(nombre_pregunta);
+			pregunta.setDescripcion(descripcion);
+			pregunta.setUsuario(usuario);
+			
+			//Insertar pregunta
+			preguntaService.InsertPregunta(pregunta);
+			
+			logger.warn("Este es el usuario " + usuario.getNombre()+ " " + usuario.getCorreo());
+			
+			return new ResponseEntity<Pregunta>(pregunta, HttpStatus.OK);
+		}catch (Exception e) {
+			response.put("error", true);
+			response.put("Mensaje", "Error al al intentar registrar la pregunta");
+			response.put("Detail", e.getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+	}
+	
+	
+}

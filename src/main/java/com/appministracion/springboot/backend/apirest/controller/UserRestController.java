@@ -54,9 +54,7 @@ public class UserRestController {
 			Usuario usuario = new Usuario();
 			logger.warn("Llegue  a Registrar el usuario." + request.get("activo"));
 			logger.warn("Llegue  a Registrar el usuario." + request);
-			
-	
-			
+
 			
 			//cargue de datos
 			boolean activo = (boolean) request.get("activo");
@@ -144,9 +142,6 @@ public class UserRestController {
 			response.put("Detail", e.getMessage());
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		
-		
 		
 	}
 	
