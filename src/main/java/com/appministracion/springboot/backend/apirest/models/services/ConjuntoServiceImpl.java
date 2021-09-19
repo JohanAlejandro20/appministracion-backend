@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,13 @@ public class ConjuntoServiceImpl implements IConjuntoService {
 	public Conjunto findById(long cod_conjunto) {
 		return conjuntoDao.findBycod_conjunto(cod_conjunto);
 		
+	}
+
+
+	@Override
+	public String findNameByIdUser(long cod_user) {
+		// TODO Auto-generated method stub
+		return conjuntoDao.findNameByIdUser(cod_user);
 	} 
 	
 	

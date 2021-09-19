@@ -26,6 +26,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/conjuntos","/api/clientes").permitAll()
 		.antMatchers(HttpMethod.POST,"/api/registrar").permitAll()
 		.antMatchers(HttpMethod.GET,"/api/buscar-preguntas-usuario").permitAll()
+		.antMatchers(HttpMethod.GET,"/api/buscar-nombreConjunto-usuario").permitAll()
 //		.antMatchers(HttpMethod.GET,"/api/conjuntos").hasRole("RESIDENTE")
 		.anyRequest().authenticated()
 		.and().cors().configurationSource(corsConfigurationSource());

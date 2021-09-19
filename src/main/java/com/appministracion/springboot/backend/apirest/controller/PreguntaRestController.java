@@ -86,7 +86,7 @@ public class PreguntaRestController {
 			return new ResponseEntity<Pregunta>(pregunta, HttpStatus.OK);
 		}catch (Exception e) {
 			response.put("error", true);
-			response.put("Mensaje", "Error al al intentar registrar la pregunta");
+			response.put("Mensaje", "Error al al intentar registrar la pregunta"); 
 			response.put("Detail", e.getMessage());
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
@@ -109,11 +109,6 @@ public class PreguntaRestController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		if(pregunta.isEmpty()) {
-			response.put("error", true);
-			response.put("Mensaje", "No hay ninguna pregunta realizada");
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
-		}
 		
 		return new ResponseEntity <List<PreguntaLite>>(pregunta, HttpStatus.OK);
 		
