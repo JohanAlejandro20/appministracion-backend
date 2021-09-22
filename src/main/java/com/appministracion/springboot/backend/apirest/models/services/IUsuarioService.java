@@ -7,6 +7,9 @@ public interface IUsuarioService {
 
 	public Usuario findByCorreo(String correo); 
 	
+
+	public Usuario findById(long id); 
+	
 	public Usuario insertUsuario(Usuario usuario);
 
 }

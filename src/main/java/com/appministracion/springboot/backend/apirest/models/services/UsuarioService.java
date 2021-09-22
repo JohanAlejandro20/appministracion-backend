@@ -60,6 +60,12 @@ public class UsuarioService implements UserDetailsService,IUsuarioService {
 		return usuarioDao.save(usuario);
 	}
 
+	@Override
+	public Usuario findById(long id) {
+		
+		return usuarioDao.findById(id);
+	}
+
 
 	
 	
