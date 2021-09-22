@@ -89,16 +89,16 @@ public class PreguntaRestController {
 			response.put("Mensaje", "Error al al intentar registrar la pregunta"); 
 			response.put("Detail", e.getMessage());
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}		
-	}
-	
-	@Secured("ROLE_RESIDENTE")
+		}		 
+	}  
+
+	@Secured("ROLE_RESIDENTE") 
 	@GetMapping(path = "/buscar-preguntas-usuario")
 	public ResponseEntity<?> buscarPreguntasByUsuario(@RequestParam (value="id") long id ){
 		
 		logger.warn("Llegue a buscar la pregunta que el usuario con codigo " + id + " ah realizado");
 		
-		//Busqueda de la pregunta
+		//Busqueda de la pregunta 
 		Map<String, Object> response = new HashMap<>();
 		List<PreguntaLite> pregunta = null;
 		try {
