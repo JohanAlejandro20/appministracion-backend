@@ -1,6 +1,9 @@
 package com.appministracion.springboot.backend.apirest.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.appministracion.springboot.backend.apirest.models.entity.Pregunta;
@@ -48,7 +52,7 @@ public class PreguntaRestController {
 			
 			logger.warn("Llegue  a Realizar la pregunta" + request);
 
-			//cargue de datos
+			//cargue de datos 
 			int cod_usuario_request =  (int) request.get("cod_usuario");
 			Long cod_usuario = Long.valueOf(cod_usuario_request);
 			String nombre_pregunta = (String) request.get("nombre_pregunta");
@@ -112,6 +116,56 @@ public class PreguntaRestController {
 		
 		return new ResponseEntity <List<PreguntaLite>>(pregunta, HttpStatus.OK);
 		
+	}
+	
+	@Secured("ROLE_ADMINISTRADOR") 
+	@GetMapping(path = "/buscar-preguntas-usuario-conjunto")
+    @ResponseBody
+	public ResponseEntity<?> buscarPreguntasPorUsuarioConjunto(@RequestParam (value="id") long id){
+		
+		logger.warn("Llegue a buscar la pregunta");
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		List<Map<String,Object>> pregunta =  preguntaService.findQuestionByConjunto(id);
+		
+		
+		if(pregunta.isEmpty()) {
+			response.put("Mensaje", "No hay ninguna pregunta realizada para ese conjunto");
+			response.put("error", true);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+		}
+		
+		logger.warn("soy la pregunta"+ pregunta.toString());
+		 
+		
+		return new ResponseEntity <List<Map<String,Object>>> (pregunta, HttpStatus.ACCEPTED);	
+	}
+	
+	@Secured("ROLE_ADMINISTRADOR") 
+	@GetMapping(path = "/buscar-preguntas-Byid")
+	public ResponseEntity<?> buscarPregunta(@RequestParam(value = "id") long id_pregunta) {
+
+		Map<String, Object> response = new HashMap<>();
+
+		Pregunta pregunta = null;
+		try {
+			pregunta = preguntaService.findById(id_pregunta);
+
+		} catch (DataAccessException e) {
+			response.put("Mensaje", "Error al realizar la consulta de la pregunta en la base de datos");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+		}
+
+		if (pregunta == null) {
+			response.put("error", true);
+			response.put("Mensaje", "la pregunta  " + id_pregunta + " no existe en la base de datos");
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+
+		}
+
+		return new ResponseEntity<Pregunta>(pregunta, HttpStatus.OK);
 	}
 	
 	

@@ -32,25 +32,28 @@ public class ConjuntoRestController {
 		return conjuntoService.findAll();
 	}
 
-	@Secured("ROLE_RESIDENTE")
+
+	@Secured ({"ROLE_RESIDENTE", "ROLE_ADMINISTRADOR"})
 	@GetMapping("/buscar-nombre-conjunto-usuario")
 	public  ResponseEntity<?> buscar(@RequestParam (value="id") long id ){
 		Map<String, Object> response = new HashMap<>();
 		
-		String prueba =  conjuntoService.findNameByIdUser(id);
+		String conjunto =  conjuntoService.findNameByIdUser(id);
 		
-		if(prueba == null) {
+		if(conjunto == null) {
 			response.put("Mensaje", "Error este usuario no tiene asociado ningun conjunto");
 			response.put("error", true);
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		String[] respuesta = prueba.split(",");
+		String[] respuesta = conjunto.split(",");
 		String nombre_usuario = respuesta[0];
 		String nombre_conjunto = respuesta[1];
+		String cod_conjunto = respuesta[2];
 		
 		response.put("nombre_usuario", nombre_usuario);
 		response.put("nombre_conjunto", nombre_conjunto);
+		response.put("cod_conjunto", Long.parseLong(cod_conjunto));
 		
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 	}

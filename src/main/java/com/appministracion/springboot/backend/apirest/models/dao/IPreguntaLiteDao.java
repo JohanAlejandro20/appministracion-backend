@@ -13,5 +13,5 @@ public interface IPreguntaLiteDao extends CrudRepository<PreguntaLite, Long> {
 	
     @Query(value = "select * from preguntas where cod_usuario = :id_user", nativeQuery = true )   
 	public  List<PreguntaLite> findByIdUser(long id_user);
-	
+	 
 }

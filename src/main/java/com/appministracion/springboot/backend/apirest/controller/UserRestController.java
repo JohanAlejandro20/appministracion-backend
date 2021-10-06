@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -149,6 +150,32 @@ public class UserRestController {
 		Rol rol = rolService.findById(cod_rol);
 		usuario.getRoles().add(rol);
 		return rol;
+	}
+	
+	public ResponseEntity<?> buscarUsuario(@RequestParam (value="id") long id_usuario) {
+		
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		Usuario Usuario = null;
+		try {
+			Usuario = usuarioService.findById(id_usuario);
+			
+		} catch (DataAccessException e) {
+			response.put("Mensaje", "Error al realizar la consulta del usuario en la base de datos");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+		}
+		
+		if(Usuario != null) {
+			response.put("error", true);
+			response.put("Mensaje", "EL usuario con id "+ id_usuario + " no existe en la base de datos");
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+			
+		}
+		
+		
+		return new ResponseEntity<Usuario>(Usuario, HttpStatus.OK);
 	}
 	
 	
