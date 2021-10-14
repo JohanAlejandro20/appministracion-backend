@@ -2,9 +2,7 @@ package com.appministracion.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -23,15 +20,14 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "preguntas")
-public class Pregunta implements Serializable {
-
-
+@Table(name = "respuestas")
+public class Respuesta implements Serializable{
+	
+	
 
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY )
-	private Long cod_pregunta;
-	
+	private Long cod_respuesta;
 	
 	private String nombre;
 	
@@ -42,30 +38,27 @@ public class Pregunta implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date  createAt;
 	
-	@JsonIgnoreProperties({"preguntas","hibernateLazyInitializer","handler"})
+	@JsonIgnoreProperties({"respuestas","hibernateLazyInitializer","handler"})
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cod_pregunta")
+	private Pregunta pregunta;
+	
+	@JsonIgnoreProperties({"respuestas","hibernateLazyInitializer","handler"})
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cod_usuario")
 	private Usuario usuario;
 	
-	@JsonIgnoreProperties({"preguntas","hibernateLazyInitializer","handler"})
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cod_respuesta")
-	private Respuesta respuesta;
-
-	
-
 	@PrePersist
 	public void prePersist() {
 		this.createAt = new Date();
 	}
-	
-	
-	public Long getCod_pregunta() {
-		return cod_pregunta;
+
+	public Long getCod_respuesta() {
+		return cod_respuesta;
 	}
 
-	public void setCod_pregunta(Long cod_pregunta) {
-		this.cod_pregunta = cod_pregunta;
+	public void setCod_respuesta(Long cod_respuesta) {
+		this.cod_respuesta = cod_respuesta;
 	}
 
 	public String getNombre() {
@@ -92,6 +85,16 @@ public class Pregunta implements Serializable {
 		this.createAt = createAt;
 	}
 
+	public Pregunta getPregunta() {
+		return pregunta;
+	}
+
+	public void setPregunta(Pregunta pregunta) {
+		this.pregunta = pregunta;
+	}
+	
+	
+	
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -99,27 +102,14 @@ public class Pregunta implements Serializable {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
-	
-	public Respuesta getRespuesta() {
-		return respuesta;
-	}
 
 
-	public void setRespuesta(Respuesta respuesta) {
-		this.respuesta = respuesta;
-	}
 
-	
-	
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
-	
-	
 
+	
+	
 }
