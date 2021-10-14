@@ -2,7 +2,9 @@ package com.appministracion.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -42,8 +46,14 @@ public class Pregunta implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cod_usuario")
 	private Usuario usuario;
+	
+	@JsonIgnoreProperties({"preguntas","hibernateLazyInitializer","handler"})
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cod_respuesta")
+	private Respuesta respuesta;
 
 	
+
 	@PrePersist
 	public void prePersist() {
 		this.createAt = new Date();
@@ -89,6 +99,17 @@ public class Pregunta implements Serializable {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
+	
+	
+	public Respuesta getRespuesta() {
+		return respuesta;
+	}
+
+
+	public void setRespuesta(Respuesta respuesta) {
+		this.respuesta = respuesta;
+	}
+
 	
 	
 	

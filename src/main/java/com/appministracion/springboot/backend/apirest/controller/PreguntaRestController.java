@@ -142,7 +142,7 @@ public class PreguntaRestController {
 		return new ResponseEntity <List<Map<String,Object>>> (pregunta, HttpStatus.ACCEPTED);	
 	}
 	
-	@Secured("ROLE_ADMINISTRADOR") 
+	@Secured ({"ROLE_RESIDENTE", "ROLE_ADMINISTRADOR"})
 	@GetMapping(path = "/buscar-preguntas-Byid")
 	public ResponseEntity<?> buscarPregunta(@RequestParam(value = "id") long id_pregunta) {
 

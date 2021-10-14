@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -38,9 +39,14 @@ public class Respuesta implements Serializable{
 	private Date  createAt;
 	
 	@JsonIgnoreProperties({"respuestas","hibernateLazyInitializer","handler"})
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cod_pregunta")
 	private Pregunta pregunta;
+	
+	@JsonIgnoreProperties({"respuestas","hibernateLazyInitializer","handler"})
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cod_usuario")
+	private Usuario usuario;
 	
 	@PrePersist
 	public void prePersist() {
@@ -87,6 +93,18 @@ public class Respuesta implements Serializable{
 		this.pregunta = pregunta;
 	}
 	
+	
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+
+
 	/**
 	 * 
 	 */
