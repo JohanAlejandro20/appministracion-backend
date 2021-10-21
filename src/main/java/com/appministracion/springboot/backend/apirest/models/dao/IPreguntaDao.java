@@ -26,5 +26,21 @@ public interface IPreguntaDao extends CrudRepository<Pregunta, Long> {
     		+ "usuarios u inner join preguntas p on p.cod_usuario = u.cod_usuario\n"
     		+ "inner join conjuntos c on c.cod_conjunto = u.cod_conjunto  left join respuestas r on r.cod_pregunta  = p.cod_pregunta where u.cod_conjunto = :id_conjunto", nativeQuery = true )  
     public List<Map<String,Object>> findQuestionByConjunto(long id_conjunto);
+    
+    
+    @Query(value ="select p.cod_pregunta as cod_pregunta, p.nombre as nombre, p.descripcion  as descripcion, p.create_at  as createAt,"
+    		+ "r.cod_respuesta as cod_respuesta\n"
+    		+ "from preguntas p left join respuestas r on p.cod_pregunta = r.cod_pregunta where p.cod_usuario = 1 and r.cod_respuesta is not null \n"
+    		+ "", nativeQuery = true)
+    public List<Map<String,Object>>  findAnsweredQuestions(long id_usuario);
+    
+    
+    @Query(value ="select p.cod_pregunta as cod_pregunta, p.nombre as nombre, p.descripcion  as descripcion, p.create_at  as createAt,"
+    		+ "r.cod_respuesta as cod_respuesta\n"
+    		+ "from preguntas p left join respuestas r on p.cod_pregunta = r.cod_pregunta where p.cod_usuario = 1 and r.cod_respuesta is null \n"
+    		+ "", nativeQuery = true)
+    public List<Map<String,Object>>  findNotAnsweredQuestions(long id_usuario);
+    
+    
 	
 } 

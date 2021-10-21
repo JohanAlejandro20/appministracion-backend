@@ -169,4 +169,31 @@ public class PreguntaRestController {
 	}
 	
 	
+	@Secured("ROLE_RESIDENTE") 
+	@GetMapping(path = "/filtrar-pregunta-usuario-by-respuesta")
+	public ResponseEntity<?> filtarPreguntaUsuarioByRespuesta(@RequestParam (value="id_usuario") long id_usuario, @RequestParam (value="is_response") boolean  is_response){
+		
+		logger.warn("Llegue a buscar la pregunta que el usuario con codigo " + id_usuario + " ah realizado");
+		
+		//Busqueda de la pregunta 
+		Map<String, Object> response = new HashMap<>();
+		List<Map<String,Object>>  pregunta = null;
+		try {
+			if(is_response) {
+				pregunta  = preguntaService.findAnsweredQuestions(id_usuario);
+			}else {
+				pregunta  = preguntaService.findNotAnsweredQuestions(id_usuario);
+			}
+		} catch (DataAccessException e) {
+			response.put("Mensaje", "Error al realizar la consulta del usuario en la base de datos");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+ 		
+		return new ResponseEntity <List<Map<String,Object>>>(pregunta, HttpStatus.OK);
+		
+	}
+	
+	
+	
 }

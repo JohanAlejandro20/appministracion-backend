@@ -17,6 +17,10 @@ public interface IPreguntaService {
 	
 	public List<Map<String,Object>> findQuestionByConjunto(long id_conjunto);
 	
-	 public Pregunta findById(long cod_pregunta);	
+	public Pregunta findById(long cod_pregunta);	
+	
+	public List<Map<String,Object>> findAnsweredQuestions(long cod_usuario);
+	
+	 public List<Map<String,Object>>  findNotAnsweredQuestions(long id_usuario);
 	
 }

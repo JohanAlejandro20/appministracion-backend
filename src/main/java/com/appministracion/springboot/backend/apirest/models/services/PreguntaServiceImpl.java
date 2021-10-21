@@ -41,6 +41,20 @@ public class PreguntaServiceImpl implements IPreguntaService {
 	@Override
 	public Pregunta findById(long cod_pregunta) {
 		return preguntaDao.findBycod_pregunta(cod_pregunta);
-	} 
+	}
+
+	@Override
+	public List<Map<String,Object>> findAnsweredQuestions(long cod_usuario) {
+		
+		return preguntaDao.findAnsweredQuestions(cod_usuario);
+	}
+
+	@Override
+	public List<Map<String, Object>> findNotAnsweredQuestions(long id_usuario) {
+		
+		return preguntaDao.findNotAnsweredQuestions(id_usuario);
+	}
+	
+	
 
 }
