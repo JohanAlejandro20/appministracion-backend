@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,8 @@ import com.appministracion.springboot.backend.apirest.models.entity.PreguntaLite
 import com.appministracion.springboot.backend.apirest.models.entity.Usuario;
 import com.appministracion.springboot.backend.apirest.models.services.IPreguntaService;
 import com.appministracion.springboot.backend.apirest.models.services.IUsuarioService;
+
+import net.bytebuddy.dynamic.loading.PackageDefinitionStrategy.Definition.Undefined;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
@@ -98,42 +101,61 @@ public class PreguntaRestController {
 
 	@Secured("ROLE_RESIDENTE") 
 	@GetMapping(path = "/buscar-preguntas-usuario")
-	public ResponseEntity<?> buscarPreguntasByUsuario(@RequestParam (value="id") long id ){
+	public ResponseEntity<?> buscarPreguntasByUsuario(@RequestParam (value="id_usuario") long id, @RequestParam (value="is_response") int  is_response, @RequestParam (value="filter") String  filter){
 		
 		logger.warn("Llegue a buscar la pregunta que el usuario con codigo " + id + " ah realizado");
 		
+		
+		
+		logger.warn("Llegue a buscar la pregunta que el usuario con codigo " + filter + " ah realizado");
+		List<Map<String,Object>>  pregunta = null;
+		List<PreguntaLite> preguntaLite = null;			
+		filter = filter.isEmpty() ? null: filter;	
+				
 		//Busqueda de la pregunta 
 		Map<String, Object> response = new HashMap<>();
-		List<PreguntaLite> pregunta = null;
 		try {
-			 pregunta  = preguntaService.findByIdUser(id);
+			if(is_response == 1) {
+				preguntaLite  = preguntaService.findByIdUser(id,filter);
+				return new ResponseEntity <List<PreguntaLite>>(preguntaLite, HttpStatus.OK);
+			}else if(is_response == 2) {
+				pregunta  = preguntaService.findAnsweredQuestions(id,filter);
+		
+			}else if(is_response == 3) {
+				pregunta = preguntaService.findNotAnsweredQuestions(id,filter);
+			}
+			return new ResponseEntity <List<Map<String,Object>>>(pregunta, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			response.put("Mensaje", "Error al realizar la consulta del usuario en la base de datos");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR); 
+			
 		}
+		 
 		
-		
-		return new ResponseEntity <List<PreguntaLite>>(pregunta, HttpStatus.OK);
 		
 	}
 	
 	@Secured("ROLE_ADMINISTRADOR") 
 	@GetMapping(path = "/buscar-preguntas-usuario-conjunto")
     @ResponseBody
-	public ResponseEntity<?> buscarPreguntasPorUsuarioConjunto(@RequestParam (value="id") long id){
+	public ResponseEntity<?> buscarPreguntasPorUsuarioConjunto(@RequestParam (value="id") long id, @RequestParam (value="filterResponse") long filter){
 		
 		logger.warn("Llegue a buscar la pregunta");
 		
+		logger.warn("filtro", filter);
+		
 		Map<String, Object> response = new HashMap<>();
+
+		
 		
 		List<Map<String,Object>> pregunta =  preguntaService.findQuestionByConjunto(id);
+
 		
-		
-		if(pregunta.isEmpty()) {
-			response.put("Mensaje", "No hay ninguna pregunta realizada para ese conjunto");
-			response.put("error", true);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+		if(filter  == 2) {
+			pregunta = preguntaService.findQuestionByConjuntoWithResponse(id);
+		}else if (filter == 3){
+			pregunta = preguntaService.findQuestionByConjuntoWithNotResponse(id);
 		}
 		
 		logger.warn("soy la pregunta"+ pregunta.toString());
@@ -167,33 +189,6 @@ public class PreguntaRestController {
 
 		return new ResponseEntity<Pregunta>(pregunta, HttpStatus.OK);
 	}
-	
-	
-	@Secured("ROLE_RESIDENTE") 
-	@GetMapping(path = "/filtrar-pregunta-usuario-by-respuesta")
-	public ResponseEntity<?> filtarPreguntaUsuarioByRespuesta(@RequestParam (value="id_usuario") long id_usuario, @RequestParam (value="is_response") boolean  is_response){
-		
-		logger.warn("Llegue a buscar la pregunta que el usuario con codigo " + id_usuario + " ah realizado");
-		
-		//Busqueda de la pregunta 
-		Map<String, Object> response = new HashMap<>();
-		List<Map<String,Object>>  pregunta = null;
-		try {
-			if(is_response) {
-				pregunta  = preguntaService.findAnsweredQuestions(id_usuario);
-			}else {
-				pregunta  = preguntaService.findNotAnsweredQuestions(id_usuario);
-			}
-		} catch (DataAccessException e) {
-			response.put("Mensaje", "Error al realizar la consulta del usuario en la base de datos");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
- 		
-		return new ResponseEntity <List<Map<String,Object>>>(pregunta, HttpStatus.OK);
-		
-	}
-	
 	
 	
 }
