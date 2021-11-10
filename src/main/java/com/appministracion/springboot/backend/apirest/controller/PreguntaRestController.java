@@ -139,7 +139,7 @@ public class PreguntaRestController {
 	@Secured("ROLE_ADMINISTRADOR") 
 	@GetMapping(path = "/buscar-preguntas-usuario-conjunto")
     @ResponseBody
-	public ResponseEntity<?> buscarPreguntasPorUsuarioConjunto(@RequestParam (value="id") long id, @RequestParam (value="filterResponse") long filter){
+	public ResponseEntity<?> buscarPreguntasPorUsuarioConjunto(@RequestParam (value="id") long id, @RequestParam (value="filterResponse") long filter,@RequestParam (value="filter") String  filterCoincidence){
 		
 		logger.warn("Llegue a buscar la pregunta");
 		
@@ -147,15 +147,17 @@ public class PreguntaRestController {
 		
 		Map<String, Object> response = new HashMap<>();
 
+		filterCoincidence = filterCoincidence.isEmpty() ? null: filterCoincidence;
 		
+		logger.warn("coincidencia", filterCoincidence);
 		
-		List<Map<String,Object>> pregunta =  preguntaService.findQuestionByConjunto(id);
+		List<Map<String,Object>> pregunta =  preguntaService.findQuestionByConjunto(id,filterCoincidence);
 
 		
 		if(filter  == 2) {
-			pregunta = preguntaService.findQuestionByConjuntoWithResponse(id);
+			pregunta = preguntaService.findQuestionByConjuntoWithResponse(id,filterCoincidence);
 		}else if (filter == 3){
-			pregunta = preguntaService.findQuestionByConjuntoWithNotResponse(id);
+			pregunta = preguntaService.findQuestionByConjuntoWithNotResponse(id,filterCoincidence);
 		}
 		
 		logger.warn("soy la pregunta"+ pregunta.toString());

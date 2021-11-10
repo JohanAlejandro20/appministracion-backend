@@ -16,13 +16,13 @@ public interface IPreguntaService {
 	public List<PreguntaLite> findByIdUser(long id_user, String filter);
 	
 	
-	public List<Map<String,Object>> findQuestionByConjunto(long id_conjunto);
+	public List<Map<String,Object>> findQuestionByConjunto(long id_conjunto,String filter);
 	
 	
-	public List<Map<String,Object>> findQuestionByConjuntoWithResponse(long id_conjunto);
+	public List<Map<String,Object>> findQuestionByConjuntoWithResponse(long id_conjunto,String filter);
 	
 	
-	public List<Map<String,Object>> findQuestionByConjuntoWithNotResponse(long id_conjunto);
+	public List<Map<String,Object>> findQuestionByConjuntoWithNotResponse(long id_conjunto, String filter);
 	
 	
 	
