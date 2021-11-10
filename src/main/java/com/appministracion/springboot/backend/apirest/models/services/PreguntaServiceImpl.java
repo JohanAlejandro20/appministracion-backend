@@ -34,9 +34,9 @@ public class PreguntaServiceImpl implements IPreguntaService {
 	}
 
 	@Override
-	public List<Map<String,Object>> findQuestionByConjunto(long id_conjunto) {
+	public List<Map<String,Object>> findQuestionByConjunto(long id_conjunto,String filter) {
 		
-		return  preguntaDao.findQuestionByConjunto(id_conjunto);
+		return  preguntaDao.findQuestionByConjunto(id_conjunto, filter);
 	}
 
 	@Override
@@ -57,15 +57,15 @@ public class PreguntaServiceImpl implements IPreguntaService {
 	}
 
 	@Override
-	public List<Map<String, Object>> findQuestionByConjuntoWithResponse(long id_conjunto) {
+	public List<Map<String, Object>> findQuestionByConjuntoWithResponse(long id_conjunto,String filter) {
 		
-		return preguntaDao.findQuestionByConjuntoWithResponse(id_conjunto);
+		return preguntaDao.findQuestionByConjuntoWithResponse(id_conjunto,filter);
 	}
 
 	@Override
-	public List<Map<String, Object>> findQuestionByConjuntoWithNotResponse(long id_conjunto) {
+	public List<Map<String, Object>> findQuestionByConjuntoWithNotResponse(long id_conjunto,String filter) {
 		
-		 return preguntaDao.findQuestionByConjuntoWithNotResponse(id_conjunto);
+		 return preguntaDao.findQuestionByConjuntoWithNotResponse(id_conjunto,filter);
 	}
 	
 	
