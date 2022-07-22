@@ -59,6 +59,8 @@ public class Usuario implements Serializable{
 	@JoinColumn(name = "cod_conjunto")
 	private Conjunto conjunto;
 	
+	private String foto;
+	
 	
 	@PrePersist
 	public void prePersist() {
@@ -131,6 +133,21 @@ public class Usuario implements Serializable{
 		this.activo = activo;
 	}
 	
+	
+	
+	
+	public String getFoto() {
+		return foto;
+	}
+
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+
+
+
 	/**
 	 * 
 	 */

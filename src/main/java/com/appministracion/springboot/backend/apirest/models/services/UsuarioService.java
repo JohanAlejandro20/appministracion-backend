@@ -1,6 +1,7 @@
 package com.appministracion.springboot.backend.apirest.models.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -66,6 +67,23 @@ public class UsuarioService implements UserDetailsService,IUsuarioService {
 		return usuarioDao.findById(id);
 	}
 
+	@Override
+	public Usuario save(Usuario usuario) {
+		return usuarioDao.save(usuario);
+	}
+
+	@Override
+	public int UpdateUser(String name, String phone, String email,long id) {
+
+		return usuarioDao.updateuser(name, phone, email, id);
+	}
+
+	@Override
+	public int UpdateUserPassword(String name, String phone, String email, String password,long id) {
+		
+		return this.usuarioDao.updateuserPassword(name, phone, email, password, id);
+		
+	}
 
 	
 	

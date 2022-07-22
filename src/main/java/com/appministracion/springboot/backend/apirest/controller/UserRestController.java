@@ -1,7 +1,12 @@
 package com.appministracion.springboot.backend.apirest.controller;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,11 +20,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.multipart.MultipartFile;
 
 import com.appministracion.springboot.backend.apirest.models.entity.Conjunto;
 import com.appministracion.springboot.backend.apirest.models.entity.Rol;
@@ -182,6 +188,87 @@ public class UserRestController {
 		
 		return new ResponseEntity<Usuario>(Usuario, HttpStatus.OK);
 	}
+	
+	@PostMapping("/usuario/upload")
+	public ResponseEntity<?> upload (@RequestParam("archivo") MultipartFile archivo, @RequestParam("id") Long id){
+		
+		
+		Map<String, Object> response = new HashMap<>();
+
+		Usuario usuario = usuarioService.findById(id);
+		
+		if(!archivo.isEmpty()) {
+			String nombreArchivo = archivo.getOriginalFilename();
+			Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
+			try {
+				Files.copy(archivo.getInputStream(), rutaArchivo);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			usuario.setFoto(nombreArchivo);
+			
+			//usuarioService.
+		}
+
+		
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+		
+	}
+	
+	
+	@Secured ({"ROLE_RESIDENTE", "ROLE_ADMINISTRADOR"})
+	@PutMapping("/actualizar-usuario")
+	public ResponseEntity<?> updateUser (@RequestBody Map<String, Object>  request ){
+		
+		
+		Map<String, Object> response = new HashMap<>();
+			logger.warn("Llegue  a actualizar el usuario." + request);
+
+			
+			//cargue de datos
+			boolean cambiarContraseña = (boolean) request.get("cambiaContraseña");
+			String correo = (String) request.get("correo");
+			String nombre = (String) request.get("nombre");
+			String telefono = (String) request.get("telefono");
+			int cod_usuario_request =  (int) request.get("cod_user");
+			Long cod_usuario = Long.valueOf(cod_usuario_request);
+			
+			int usuario = 0;
+			
+			try {
+			if (cambiarContraseña) {
+				String contraseña = (String) request.get("nuevaContraseña");
+				String contraseñaEncript = passwordEncoder.encode(contraseña);
+				
+				usuario = usuarioService.UpdateUserPassword(nombre, telefono, correo, contraseñaEncript, cod_usuario_request);
+				
+			}else { 
+				usuario = usuarioService.UpdateUser(nombre, telefono,correo, cod_usuario);
+				logger.warn("Llegue  a actualizar el usuario." + usuario);
+ 
+				
+			}
+			} catch (DataAccessException e) {
+				response.put("Mensaje", "Error al realizar la consulta del usuario en la base de datos");
+				response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+			}
+			
+			if(usuario == 0) {
+				response.put("Mensaje", "no se ah encontrado ningun usuario en la base de datos");
+				response.put("error", true);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+			}else {
+				response.put("Mensaje", "Usario actualizado correctamente");
+				response.put("error", false );
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+			}
+		
+
+	}
+	
 	
 	
 }
